@@ -48,4 +48,14 @@ jobs:
             make package/luci-app-powermanager/compile V=s -j$(nproc)
 
       - name: Release
-        uses: mokanove/mokanove/actions/luci-release@main
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: V${{ steps.get_version.outputs.version }}
+          files: |
+            immortalwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/*/base/*.ipk
+            immortalwrt-sdk-25.12-SNAPSHOT-x86-64_gcc-14.3.0_musl.Linux-x86_64/bin/packages/*/base/*.apk
+          body: |
+            # This release by GitHub Actions
+            > Do you need know new upgrade? Do it your self!
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
