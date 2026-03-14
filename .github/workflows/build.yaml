@@ -1,0 +1,47 @@
+name : Let's build from here
+
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Build Dependencies
+        uses: mokanove/mokanove/actions/prepare-sdk/env.yaml@main
+
+      - name: Clone ImmortalWrt 24.10.5 X86_64 SDK & init
+        uses: mokanove/mokanove/actions/prepare-sdk/X86_64-ipk.yaml@main
+
+      - name: Clone Project source code
+        shell: bash
+        run: |
+             cd immortalwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/package/
+             git clone https://github.com/mokanove/luci-app-powermanager.git
+
+      - name: Build!
+        shell: bash
+        run : |
+            cd immortalwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64
+            make package/luci-app-powermanager/compile V=s -j$(nproc)
+
+      - name: Get Version
+        id: get_version
+        shell: bash
+        run: |
+            cd immortalwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/package/luci-app-powermanager
+            VERSION=$(sed -n 's/^PKG_VERSION := //p' Makefile)
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          files: |
+            immortalwrt-sdk-24.10.5-x86-64_gcc-13.3.0_musl.Linux-x86_64/bin/packages/*/base/luci-app-powermanager_*.ipk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
