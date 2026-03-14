@@ -13,10 +13,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Build Dependencies
-        uses: mokanove/mokanove/actions/prepare-sdk/env.yaml@main
+        uses: mokanove/mokanove/actions/luci-env@main
 
       - name: Clone ImmortalWrt 24.10.5 X86_64 SDK & init
-        uses: mokanove/mokanove/actions/prepare-sdk/X86_64-ipk.yaml@main
+        uses: mokanove/mokanove/actions/prepare-x86_64-ipk-sdk@main
 
       - name: Clone Project source code
         shell: bash
