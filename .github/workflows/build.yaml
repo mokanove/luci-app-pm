@@ -59,7 +59,7 @@ jobs:
           make package/luci-app-powermanager/compile V=s -j$(nproc)
 
       - name: Release
-        uses: softprops/action-gh-release@copilot/fix-8cc96c9f-14fa-4c73-89d2-a72cbdcbee20
+        uses: softprops/action-gh-release@master
         with:
           tag_name: V${{ steps.get_version.outputs.version }}
           files: ${{ matrix.sdk_name }}/bin/packages/*/*/*.${{ matrix.ext }}
