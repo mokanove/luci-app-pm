@@ -1,4 +1,4 @@
-name: "Let's build from here"
+name: "Do it yourself."
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build:
-    name: Build (${{ matrix.version }}_${{ matrix.ext }})
+    name: Build @ ${{ matrix.version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -19,7 +19,6 @@ jobs:
             target: "x86"
             subtarget: "64"
             sdk_name: "immortalwrt-sdk-25.12.0-rc1-x86-64_gcc-14.3.0_musl.Linux-x86_64"
-            ext: "apk"
 
     steps:
       - name: Checkout Code
@@ -57,10 +56,14 @@ jobs:
         uses: softprops/action-gh-release@master
         with:
           tag_name: V${{ steps.get_version.outputs.version }}
-          files: ${{ matrix.sdk_name }}/bin/packages/*/*/*.${{ matrix.ext }}
+          files: ${{ matrix.sdk_name }}/bin/packages/*/*/*
           body: |
-            # This release by GitHub Actions
-            > Do you need know new update? Do it your self!
+            # 🚀 Release Notes
+            ### ✨ Change Logs
+            - **UI Optimization**: The original large button was changed to a smaller button and placed on the left side of the screen.
+            - **I18n Update**: The language pack has been updated, making it more human-friendly.
+            ### 🏥 Personal Status
+            - Fuck you, C.Diff! I now have vancomycin. 💉
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
