@@ -9,16 +9,13 @@ permissions:
 
 jobs:
   build:
-    name: Build @ ${{ matrix.version }}
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - version: "25.12.0-rc1"
-            target: "x86"
-            subtarget: "64"
-            sdk_name: "immortalwrt-sdk-25.12.0-rc1-x86-64_gcc-14.3.0_musl.Linux-x86_64"
+          - sdk_name: "immortalwrt-sdk-25.12.0-rc1-x86-64_gcc-14.3.0_musl.Linux-x86_64"
 
     steps:
       - name: Checkout Code
@@ -30,9 +27,6 @@ jobs:
       - name: Prepare SDK
         uses: mokanove/mokanove/actions/prepare-sdk@main
         with:
-          version: ${{ matrix.version }}
-          target: ${{ matrix.target }}
-          subtarget: ${{ matrix.subtarget }}
           sdk_name: ${{ matrix.sdk_name }}
 
       - name: Clone Project source code & Get Version
@@ -56,14 +50,11 @@ jobs:
         uses: softprops/action-gh-release@master
         with:
           tag_name: V${{ steps.get_version.outputs.version }}
-          files: ${{ matrix.sdk_name }}/bin/packages/*/*/*
+          files: ${{ matrix.sdk_name }}/bin/packages/**/*.apk
           body: |
             # 🚀 Release Notes
             ### ✨ Change Logs
-            - **UI Optimization**: The original large button was changed to a smaller button and placed on the left side of the screen.
-            - **I18n Update**: The language pack has been updated, making it more human-friendly.
-            ### 🏥 Personal Status
-            - Fuck you, C.Diff! I now have vancomycin. 💉
+            - **External Updates**:The content of the action and Makefile has been optimized.
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
