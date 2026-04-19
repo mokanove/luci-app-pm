@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ matrix.sdk_name }}/package/
-          git clone https://github.com/mokanove/luci-app-powermanager.git
+          git clone https://github.com/mokanove/luci-app-pm.git
 
           cd luci-app-powermanager
           VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
