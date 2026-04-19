@@ -36,7 +36,7 @@ jobs:
           cd ${{ matrix.sdk_name }}/package/
           git clone https://github.com/mokanove/luci-app-pm.git
 
-          cd luci-app-powermanager
+          cd luci-app-pm
           VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ matrix.sdk_name }}
-          make package/luci-app-powermanager/compile V=s -j$(nproc)
+          make package/luci-app-pm/compile V=s -j$(nproc)
 
       - name: Release
         uses: softprops/action-gh-release@master
@@ -54,7 +54,7 @@ jobs:
           body: |
             # 🚀 Release Notes
             ### ✨ Change Logs
-            - **External Updates**:The content of the action and Makefile has been optimized.
+            - Renamed powermanager to pm
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
