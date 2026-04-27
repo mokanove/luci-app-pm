@@ -1,4 +1,4 @@
-name: "Do it yourself."
+name: "Sueltame Bogota , tu ya sabes que no puedo parar."
 
 on:
   push:
@@ -16,6 +16,7 @@ jobs:
       matrix:
         include:
           - sdk_name: "immortalwrt-sdk-25.12.0-rc2-x86-64_gcc-14.3.0_musl.Linux-x86_64"
+          - project_name: "luci-app-pm"
 
     steps:
       - name: Checkout Code
@@ -29,22 +30,17 @@ jobs:
         with:
           sdk_name: ${{ matrix.sdk_name }}
 
-      - name: Clone Project source code & Get Version
-        id: get_version
-        shell: bash
-        run: |
-          cd ${{ matrix.sdk_name }}/package/
-          git clone https://github.com/mokanove/luci-app-pm.git
-
-          cd luci-app-pm
-          VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Clone Source Code & Get Version
+        uses: mokanove/mokanove/actions/clone@main
+        with:
+          sdk_name: ${{ matrix.project_name }}
 
       - name: Build!
-        shell: bash
-        run: |
-          cd ${{ matrix.sdk_name }}
-          make package/luci-app-pm/compile V=s -j$(nproc)
+        uses: mokanove/mokanove/actions/build@main
+        with:
+          sdk_name: ${{ matrix.sdk_name }}
+          project_name: ${{ matrix.project_name }}
+
 
       - name: Release
         uses: softprops/action-gh-release@master
@@ -53,7 +49,7 @@ jobs:
           files: ${{ matrix.sdk_name }}/bin/packages/**/*.apk
           body: |
             # 🚀 Release Notes
-            - Upgraded SDK version to 25.12.0-rc2
+            - Separate the Action section.
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
