@@ -36,7 +36,7 @@ jobs:
       - name: Get Version
         id: get_version
         run: |
-          cd ${{ env.sdk_name }}
+          cd ${{ env.sdk_name }}/package/${{ env.project_name }}
           VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
