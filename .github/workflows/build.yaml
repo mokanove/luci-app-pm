@@ -9,14 +9,11 @@ permissions:
 
 jobs:
   build:
-    name: Build
+    name: Let's build from here
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - sdk_name: "immortalwrt-sdk-25.12.0-rc2-x86-64_gcc-14.3.0_musl.Linux-x86_64"
-          - project_name: "luci-app-pm"
+    env:
+      sdk_name: "immortalwrt-sdk-25.12.0-rc2-x86-64_gcc-14.3.0_musl.Linux-x86_64"
+      project_name: "luci-app-pm"
 
     steps:
       - name: Checkout Code
@@ -28,28 +25,35 @@ jobs:
       - name: Prepare SDK
         uses: mokanove/mokanove/actions/prepare-sdk@main
         with:
-          sdk_name: ${{ matrix.sdk_name }}
+          sdk_name: ${{ env.sdk_name }}
 
-      - name: Clone Source Code & Get Version
+      - name: Clone Source Code
         uses: mokanove/mokanove/actions/clone@main
         with:
-          sdk_name: ${{ matrix.project_name }}
+          sdk_name: ${{ env.project_name }}
+          project_name: ${{ env.project_name }}
+
+      - name: Get Version
+        id: get_version
+        run: |
+          cd ${{ env.sdk_name }}
+          VERSION=$(grep -E "^PKG_VERSION[[:space:]]*:=" Makefile | sed -E 's/.*:=[[:space:]]*//' | tr -d '[:space:]')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build!
         uses: mokanove/mokanove/actions/build@main
         with:
-          sdk_name: ${{ matrix.sdk_name }}
-          project_name: ${{ matrix.project_name }}
-
+          sdk_name: ${{ env.sdk_name }}
+          project_name: ${{ env.project_name }}
 
       - name: Release
         uses: softprops/action-gh-release@master
         with:
           tag_name: V${{ steps.get_version.outputs.version }}
-          files: ${{ matrix.sdk_name }}/bin/packages/**/*.apk
-          body: |
-            # 🚀 Release Notes
-            - Separate the Action section.
+          files: ${{ env.sdk_name }}/bin/packages/**/*.apk
           make_latest: true
+          body: |
+            # 📝 Release Notes
+            - Compiled using automated workflow.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
