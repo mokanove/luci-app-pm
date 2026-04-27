@@ -30,7 +30,7 @@ jobs:
       - name: Clone Source Code
         uses: mokanove/mokanove/actions/clone@main
         with:
-          sdk_name: ${{ env.project_name }}
+          sdk_name: ${{ env.sdk_name }}
           project_name: ${{ env.project_name }}
 
       - name: Get Version
