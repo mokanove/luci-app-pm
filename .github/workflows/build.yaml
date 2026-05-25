@@ -54,7 +54,6 @@ jobs:
           make_latest: true
           body: |
             # 📝 Release Notes
-            - Merged Pull Request [#1](https://github.com/mokanove/luci-app-pm/pull/1)
-            - Changed SDK to openwrt-sdk-25.12.4-x86-64_gcc-14.3.0_musl.Linux-x86_64
+            - Fixed LICENSE Bug
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
