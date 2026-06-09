@@ -44,7 +44,7 @@ jobs:
         uses: softprops/action-gh-release@master
         with:
           tag_name: V${{ steps.get_version.outputs.version }}
-          files: ${{ env.sdk_name }}/bin/packages/**/*.apk
+          files: ${{ env.sdk_name }}/bin/packages/x86_64/base/*.apk
           make_latest: true
           body: |
             # 📝 Release Notes
