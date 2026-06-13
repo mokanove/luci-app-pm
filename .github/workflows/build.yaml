@@ -47,7 +47,7 @@ jobs:
           files: ${{ env.sdk_name }}/bin/packages/x86_64/base/*.apk
           make_latest: true
           body: |
-            # 📝 Release Notes
-            - Some action change
+            # 📝 Release Note
+            - Fixes and improvements
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
